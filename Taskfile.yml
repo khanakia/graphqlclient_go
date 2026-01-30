@@ -1,0 +1,58 @@
+# https://taskfile.dev
+
+version: "3"
+
+tasks:
+  # gqlsdl tasks
+  gqlsdl:run:
+    desc: Run gqlsdl module
+    dir: ./gqlsdl
+    cmds:
+      - go run .
+
+  gqlsdl:build:
+    desc: Build gqlsdl module
+    dir: ./gqlsdl
+    cmds:
+      - go build -o ../bin/gqlsdl .
+
+  # gqlsdk tasks
+  gqlsdk:run:
+    desc: Run gqlsdk module
+    dir: ./gqlsdk
+    cmds:
+      - go run .
+
+  gqlsdk:build:
+    desc: Build gqlsdk module
+    dir: ./gqlsdk
+    cmds:
+      - go build -o ../bin/gqlsdk .
+
+  # Workspace tasks
+  build:
+    desc: Build all modules
+    cmds:
+      - mkdir -p bin
+      - task: gqlsdl:build
+      - task: gqlsdk:build
+
+  tidy:
+    desc: Run go mod tidy on all modules
+    cmds:
+      - |
+        set -ex
+        for d in $(sed -n '/^use *(/,/^)/p' go.work | tail -n +2 | sed '$d' | sed 's/^[ \t]*//; s/[ \t]*$//'); do
+          echo ">> Tidying '$d'"
+          (cd "$d" && go mod tidy)
+        done
+
+  upgrade:
+    desc: Update all go modules in go.work
+    cmds:
+      - |
+        set -ex
+        for d in $(sed -n '/^use *(/,/^)/p' go.work | tail -n +2 | sed '$d' | sed 's/^[ \t]*//; s/[ \t]*$//'); do
+          echo ">> Updating '$d'"
+          (cd "$d" && go get -u ./... && go mod tidy)
+        done
