@@ -1,8 +1,14 @@
 package schema
 
+// GraphQLError represents an error returned by a GraphQL endpoint
+type GraphQLError struct {
+	Message string `json:"message"`
+}
+
 // IntrospectionResponse represents the root response from a GraphQL introspection query
 type IntrospectionResponse struct {
-	Data IntrospectionData `json:"data"`
+	Data   IntrospectionData `json:"data"`
+	Errors []GraphQLError    `json:"errors"`
 }
 
 // IntrospectionData contains the __schema field
