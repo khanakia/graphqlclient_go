@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 // IntrospectionQuery is the standard GraphQL introspection query
@@ -150,6 +151,14 @@ func FetchSchema(url string, opts *FetchOptions) (*IntrospectionSchema, error) {
 	var introspectionResp IntrospectionResponse
 	if err := json.Unmarshal(body, &introspectionResp); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal response: %w", err)
+	}
+
+	if len(introspectionResp.Errors) > 0 {
+		messages := make([]string, len(introspectionResp.Errors))
+		for i, e := range introspectionResp.Errors {
+			messages[i] = e.Message
+		}
+		return nil, fmt.Errorf("GraphQL errors: %s", strings.Join(messages, "; "))
 	}
 
 	return &introspectionResp.Data.Schema, nil
