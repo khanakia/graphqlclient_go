@@ -3,5 +3,7 @@ go 1.25.5
 use (
 	./gqlcustom
 	./gqlsdl
+	./gqlgenapi
 	./sdkexample
+	./sdkexample_gqlgenapi
 )

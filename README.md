@@ -7,6 +7,7 @@ A Go workspace containing tools for working with GraphQL schemas.
 | Module | Description |
 |--------|-------------|
 | [gqlsdl](./gqlsdl) | CLI tool to fetch GraphQL schema via introspection and save as SDL |
+| [gqlgenapi](./gqlgenapi) | Local GraphQL API built with gqlgen for testing the SDK/builder |
 | [gqlsdk](./gqlsdk) | GraphQL SDK (coming soon) |
 
 ## Requirements
@@ -22,6 +23,7 @@ task build
 
 # Or build individually
 task gqlsdl:build
+task gqlgenapi:build
 task gqlsdk:build
 ```
 
@@ -30,6 +32,10 @@ task gqlsdk:build
 ```bash
 task gqlsdl:run      # Run gqlsdl with go run .
 task gqlsdl:build    # Build gqlsdl to bin/
+
+task gqlgenapi:run   # Run gqlgenapi GraphQL server (gqlgen)
+task gqlgenapi:build # Build gqlgenapi server to bin/
+task gqlgenapi:generate # Regenerate gqlgen code for gqlgenapi
 
 task gqlsdk:run      # Run gqlsdk with go run .
 task gqlsdk:build    # Build gqlsdk to bin/
@@ -49,6 +55,10 @@ task upgrade         # Update all dependencies
 │   ├── go.mod
 │   ├── main.go
 │   └── schema/
+├── gqlgenapi/       # gqlgen-based GraphQL API used for testing the SDK
+│   ├── go.mod
+│   ├── server.go
+│   └── graph/
 └── gqlsdk/          # SDK module
     └── go.mod
 ```
@@ -79,4 +89,19 @@ Run Test Queries
 ```sh
 cd sdkexample
 go run ./cmd/samples
+```
+
+```sh
+  # 1) Start API (in one terminal)
+  task gqlgenapi:run
+
+  # 2) Fetch schema from gqlgenapi into the new module
+  task sdkexample_gqlgenapi:fetch-schema
+
+  # 3) Generate SDK
+  task sdkexample_gqlgenapi:generate
+
+  # 4) Run sample (ping query via generated SDK)
+  task sdkexample_gqlgenapi:run
+
 ```

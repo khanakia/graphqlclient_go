@@ -16,6 +16,25 @@ tasks:
     cmds:
       - go build -o ../bin/gqlsdl .
 
+  # gqlgenapi tasks (gqlgen-based test GraphQL API)
+  gqlgenapi:run:
+    desc: Run gqlgenapi GraphQL server
+    dir: ./gqlgenapi
+    cmds:
+      - go run ./server.go
+
+  gqlgenapi:build:
+    desc: Build gqlgenapi server binary
+    dir: ./gqlgenapi
+    cmds:
+      - go build -o ../bin/gqlgenapi ./server.go
+
+  gqlgenapi:generate:
+    desc: Regenerate gqlgen code for gqlgenapi (uses GOWORK=off)
+    dir: ./gqlgenapi
+    cmds:
+      - GOWORK=off go run github.com/99designs/gqlgen@v0.17.87 generate
+
   # gqlsdk tasks
   gqlsdk:run:
     desc: Run gqlsdk module
@@ -35,6 +54,7 @@ tasks:
     cmds:
       - mkdir -p bin
       - task: gqlsdl:build
+      - task: gqlgenapi:build
       - task: gqlsdk:build
 
   tidy:
@@ -56,3 +76,23 @@ tasks:
           echo ">> Updating '$d'"
           (cd "$d" && go get -u ./... && go mod tidy)
         done
+
+  # sdkexample_gqlgenapi tasks (SDK generated from gqlgenapi)
+  sdkexample_gqlgenapi:fetch-schema:
+    desc: Fetch schema from gqlgenapi into sdkexample_gqlgenapi via gqlsdl
+    dir: .
+    cmds:
+      - go run ./gqlsdl -url http://localhost:8081/query -output sdkexample_gqlgenapi/cmd/generate/schema.graphql
+
+  sdkexample_gqlgenapi:generate:
+    desc: Generate SDK for gqlgenapi schema
+    dir: ./sdkexample_gqlgenapi
+    cmds:
+      - go run ./cmd/generate
+
+  sdkexample_gqlgenapi:run:
+    desc: Run sample that calls gqlgenapi ping through generated SDK
+    dir: ./sdkexample_gqlgenapi
+    cmds:
+      - go run ./cmd/samples
+
