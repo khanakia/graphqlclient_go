@@ -70,7 +70,7 @@ func (g *Generator) buildFieldSelectorData(def *ast.Definition) TSFieldSelectorD
 			continue
 		}
 		baseName := getBaseTypeName(field.Type)
-		isObj := isObjectType(g.schema, field.Type) && baseName != def.Name
+		isObj := isObjectType(g.schema, field.Type)
 		isNullable := !field.Type.NonNull
 		isList := field.Type.Elem != nil
 
@@ -83,10 +83,12 @@ func (g *Generator) buildFieldSelectorData(def *ast.Definition) TSFieldSelectorD
 		}
 		if isObj {
 			f.NestedSelector = baseName + "Fields"
-			filePath := "./" + toKebabCase(baseName)
-			importMap[f.NestedSelector] = TSFieldImport{
-				ClassName: f.NestedSelector,
-				FilePath:  filePath,
+			if baseName != def.Name {
+				filePath := "./" + toKebabCase(baseName)
+				importMap[f.NestedSelector] = TSFieldImport{
+					ClassName: f.NestedSelector,
+					FilePath:  filePath,
+				}
 			}
 		} else {
 			f.TSType = g.fieldTSType(field.Type)

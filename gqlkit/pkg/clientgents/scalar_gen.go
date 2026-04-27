@@ -240,9 +240,8 @@ func (g *Generator) collectFieldSelectorTypeImports(def *ast.Definition) (enumIm
 		if strings.HasPrefix(field.Name, "__") {
 			continue
 		}
-		baseName := getBaseTypeName(field.Type)
 		// Skip object fields (they use generic U, not a concrete type name)
-		if isObjectType(g.schema, field.Type) && baseName != def.Name {
+		if isObjectType(g.schema, field.Type) {
 			continue
 		}
 		g.collectEnumRefs(field.Type, enumSeen)

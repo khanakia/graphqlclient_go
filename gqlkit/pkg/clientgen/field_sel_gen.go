@@ -110,7 +110,7 @@ func (g *Generator) buildFieldSelectorData(def *ast.Definition) FieldSelectorDat
 			continue
 		}
 		baseName := getBaseTypeName(field.Type)
-		isObj := isObjectType(g.schema, field.Type) && baseName != def.Name
+		isObj := isObjectType(g.schema, field.Type)
 
 		f := FieldSelField{
 			FieldName:  field.Name,
