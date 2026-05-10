@@ -123,7 +123,13 @@ Each `.goreleaser.yml` configures:
 
 ## Releasing
 
+> **Update the changelog first.** Every release needs a `## [X.Y.Z] — YYYY-MM-DD` section in the artifact's `CHANGELOG.md` *before* the tag is pushed. Group changes under `### Added` / `### Changed` / `### Fixed` / `### Removed` / `### Documentation`. Append a `[X.Y.Z]: …` reference link at the bottom. Verify the entry compiles by viewing the file in a markdown renderer before tagging.
+
 ### gqlkit
+
+1. Edit `gqlkit/CHANGELOG.md` — add the new version section.
+2. Commit + push the changelog edit.
+3. Tag and push:
 
 ```bash
 git tag gqlkit@v0.2.0
@@ -132,9 +138,34 @@ git push origin gqlkit@v0.2.0
 
 ### gqlkit-sdl
 
+1. Edit `gqlkit-sdl/CHANGELOG.md` — add the new version section.
+2. Commit + push the changelog edit.
+3. Tag and push:
+
 ```bash
 git tag gqlkit-sdl@v0.1.0
 git push origin gqlkit-sdl@v0.1.0
+```
+
+### gqlkit-ts (npm)
+
+The TS package ships to npm, not GitHub Releases. There's no triggered workflow — it's a manual publish.
+
+1. Edit `gqlkit-ts/CHANGELOG.md` — add the new version section.
+2. Bump + publish from inside the package:
+
+```bash
+cd gqlkit-ts
+npm version patch        # or minor / major
+npm publish              # 2FA prompt; supply --otp=XXXXXX from the authenticator
+```
+
+3. Push the version-bump commit + the local `vX.Y.Z` tag npm just created.
+4. Also push a parity tag `gqlkit-ts@vX.Y.Z` (no workflow runs — purely for traceability):
+
+```bash
+git tag gqlkit-ts@v0.2.0
+git push origin gqlkit-ts@v0.2.0
 ```
 
 ## Testing Locally

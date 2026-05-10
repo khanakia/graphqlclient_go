@@ -199,11 +199,13 @@ Deep dive: [docs/ai-friendly.md](./docs/ai-friendly.md)
 
 ## Tools
 
-| Tool | Description |
-|------|-------------|
-| `gqlkit` | CLI — generates Go and TypeScript SDKs from GraphQL schemas |
-| `gqlkit-sdl` | CLI — fetches GraphQL schemas via introspection |
-| [`gqlkit-ts`](https://www.npmjs.com/package/gqlkit-ts) | npm package — lightweight TypeScript runtime for generated SDKs |
+| Tool | Description | Changelog |
+|------|-------------|-----------|
+| `gqlkit` | CLI — generates Go and TypeScript SDKs from GraphQL schemas | [`gqlkit/CHANGELOG.md`](./gqlkit/CHANGELOG.md) |
+| `gqlkit-sdl` | CLI — fetches GraphQL schemas via introspection | [`gqlkit-sdl/CHANGELOG.md`](./gqlkit-sdl/CHANGELOG.md) |
+| [`gqlkit-ts`](https://www.npmjs.com/package/gqlkit-ts) | npm package — lightweight TypeScript runtime for generated SDKs | [`gqlkit-ts/CHANGELOG.md`](./gqlkit-ts/CHANGELOG.md) |
+
+Each artifact is versioned independently; release notes live in its own changelog. GitHub release pages at <https://github.com/khanakia/gqlkit/releases> mirror the same entries.
 
 ## Contributing
 
